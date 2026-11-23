@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>OPERATION FRONTLINE</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:#111;color:white;font-family:Arial}
+canvas{display:block}
+#hud{position:fixed;inset:0;pointer-events:none}
+#top{position:absolute;top:12px;left:12px;font-size:13px;background:#101a18cc;padding:10px;border:1px solid #62776a;border-radius:8px}
+#crosshair{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:25px;color:#dce9d9}
+#ammo{position:absolute;right:15px;bottom:125px;background:#101a18dd;padding:12px;border-radius:8px;text-align:right}
+#controls{position:absolute;bottom:15px;left:0;right:0;display:flex;justify-content:space-between;align-items:end;padding:12px;pointer-events:none}
+#stick{width:125px;height:125px;border:2px solid #b5c8b566;border-radius:50%;background:#17251d99;pointer-events:auto;touch-action:none;position:relative}
+#knob{position:absolute;width:48px;height:48px;left:36px;top:36px;border-radius:50%;background:#a9bbaaaa}
+.actions{display:flex;gap:9px;align-items:end;pointer-events:auto}
+button{background:#263c31dd;color:white;border:1px solid #9cad9b;border-radius:12px;padding:14px;font-weight:bold;touch-action:manipulation}
+button:active{background:#66866d}
+#fire{width:76px;height:76px;border-radius:50%;background:#7d302cdd}
+#lookhint{position:absolute;bottom:145px;left:50%;transform:translateX(-50%);font-size:11px;color:#ffffff99}
+#start{position:fixed;inset:0;background:#101914ee;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:25px;z-index:5}
+#start h1{letter-spacing:3px}
+#start button{font-size:18px;padding:16px 30px}
+</style>
+</head>
+<body>
+
+<div id="start">
+<h1>OPERATION<br>FRONTLINE</h1>
+<p>CAMPO DE TREINAMENTO</p>
+<p>Protótipo experimental — versão 0.1</p>
+<button id="begin">INICIAR TREINAMENTO</button>
+</div>
+
+<div id="hud">
+<div id="top">
+<b>OPERATION FRONTLINE</b><br>
+<span id="health">VIDA: 100</span><br>
+CAMPO DE TREINAMENTO
+</div>
+<div id="crosshair">+</div>
+<div id="lookhint">Arraste a tela para olhar</div>
+<div id="ammo">
+<div id="weapon">FUZIL DE ASSALTO</div>
+<b id="ammunition">30 / 120</b>
+</div>
+<div id="controls">
+<div id="stick"><div id="knob"></div></div>
+<div class="actions">
+<button id="heal">KIT<br>+25</button>
+<button id="reload">RECARREGAR</button>
+<button id="fire">ATIRAR</button>
+</div>
+</div>
+</div>
+
+<script type="module">
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x899a9a);
+scene.fog=new THREE.Fog(0x899a9a,25,90);
+
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,150);
+camera.position.set(0,1.7,5);
+
+const renderer=new THREE.WebGLRenderer({antialias:false});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+renderer.shadowMap.enabled=false;
+document.body.appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xcbd9e0,0x35402d,2));
+const sun=new THREE.DirectionalLight(0xffffff,2);
+sun.position.set(-10,20,10);
+scene.add(sun);
+
+// Chão
+const ground=new THREE.Mesh(
+new THREE.PlaneGeometry(120,120),
+new THREE.MeshStandardMaterial({color:0x455342})
+);
+ground.rotation.x=-Math.PI/2;
+ground.position.y=0;
+scene.add(ground);
+
+// Linhas do campo
+for(let i=-50;i<=50;i+=5){
+const line=new THREE.Mesh(
+new THREE.BoxGeometry(120,.015,.025),
+new THREE.MeshBasicMaterial({color:0x71816b})
+);
+line.position.set(0,.02,i);
+scene.add(line);
+}
+
+// Construções e obstáculos
+function box(x,y,z,sx,sy,sz,color){
+const obj=new THREE.Mesh(
+new THREE.BoxGeometry(sx,sy,sz),
+new THREE.MeshStandardMaterial({color})
+);
+obj.position.set(x,y,z);
+scene.add(obj);
+return obj;
+}
+
+box(0,2,-24,18,4,1,0x555b54);
+box(-9,1,-12,1,2,8,0x555b54);
+box(9,1,-12,1,2,8,0x555b54);
+box(-5,.6,-7,2,1.2,2,0x71634d);
+box(5,.6,-7,2,1.2,2,0x71634d);
+
+// Alvos
+const targets=[];
+function createTarget(x,z){
+const group=new THREE.Group();
+const body=new THREE.Mesh(
+new THREE.BoxGeometry(.65,1.1,.2),
+new THREE.MeshStandardMaterial({color:0x9c3028})
+);
+body.position.y=1.2;
+group.add(body);
+const head=new THREE.Mesh(
+new THREE.SphereGeometry(.23,12,10),
+new THREE.MeshStandardMaterial({color:0xc5a77e})
+);
+head.position.y=1.95;
+group.add(head);
+group.position.set(x,0,z);
+scene.add(group);
+targets.push({group,hp:100});
+}
+createTarget(-5,-16);
+createTarget(0,-18);
+createTarget(5,-16);
+createTarget(-10,-28);
+createTarget(10,-28);
+
+// Estado do jogador
+let hp=100,mag=30,reserve=120,reloading=false;
+let yaw=0,pitch=0;
+const keys={};
+const move={x:0,y:0};
+const raycaster=new THREE.Raycaster();
+
+function updateHUD(){
+document.getElementById('health').textContent='VIDA: '+hp;
+document.getElementById('ammunition').textContent=mag+' / '+reserve;
+}
+updateHUD();
+
+// Movimento teclado
+addEventListener('keydown',e=>{
+keys[e.key.toLowerCase()]=true;
+if(e.key.toLowerCase()==='r')reload();
+});
+addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+
+// Movimento por joystick
+const stick=document.getElementById('stick');
+const knob=document.getElementById('knob');
+let stickId=null;
+
+stick.addEventListener('pointerdown',e=>{
+stickId=e.pointerId;
+stick.setPointerCapture(stickId);
+moveStick(e);
+});
+stick.addEventListener('pointermove',e=>{
+if(e.pointerId===stickId)moveStick(e);
+});
+function moveStick(e){
+const r=stick.getBoundingClientRect();
+let x=e.clientX-(r.left+r.width/2);
+let y=e.clientY-(r.top+r.height/2);
+const max=42;
+const len=Math.hypot(x,y);
+if(len>max){x=x/len*max;y=y/len*max}
+move.x=x/max;
+move.y=y/max;
+knob.style.transform=`translate(${x}px,${y}px)`;
+}
+function releaseStick(e){
+if(e.pointerId!==stickId)return;
+stickId=null;move.x=0;move.y=0;
+knob.style.transform='translate(0,0)';
+}
+stick.addEventListener('pointerup',releaseStick);
+stick.addEventListener('pointercancel',releaseStick);
+
+// Olhar arrastando o lado direito
+let lookId=null,lastX=0,lastY=0;
+renderer.domElement.addEventListener('pointerdown',e=>{
+if(e.clientX<innerWidth*.35)return;
+lookId=e.pointerId;lastX=e.clientX;lastY=e.clientY;
+renderer.domElement.setPointerCapture(lookId);
+});
+renderer.domElement.addEventListener('pointermove',e=>{
+if(e.pointerId!==lookId)return;
+yaw-=(e.clientX-lastX)*.004;
+pitch-=(e.clientY-lastY)*.004;
+pitch=Math.max(-1.25,Math.min(1.25,pitch));
+lastX=e.clientX;lastY=e.clientY;
+});
+renderer.domElement.addEventListener('pointerup',e=>{
+if(e.pointerId===lookId)lookId=null;
+});
+
+// Disparo
+function shoot(){
+if(mag<=0||reloading)return;
+mag--;updateHUD();
+raycaster.setFromCamera(new THREE.Vector2(0,0),camera);
+const objects=targets.flatMap(t=>t.group.children);
+const hits=raycaster.intersectObjects(objects,false);
+if(hits.length){
+const hit=hits[0].object;
+const target=targets.find(t=>t.group===hit.parent);
+if(target){
+target.hp-=hit.position.y>1.5?60:30;
+if(target.hp<=0){
+scene.remove(target.group);
+targets.splice(targets.indexOf(target),1);
+}
+}
+}
+}
+document.getElementById('fire').addEventListener('pointerdown',e=>{
+e.preventDefault();shoot();
+});
+
+// Recarga
+function reload(){
+if(reloading||mag===30||reserve<=0)return;
+reloading=true;
+document.getElementById('reload').textContent='...';
+setTimeout(()=>{
+const amount=Math.min(30-mag,reserve);
+mag+=amount;reserve-=amount;
+reloading=false;
+document.getElementById('reload').textContent='RECARREGAR';
+updateHUD();
+},1400);
+}
+document.getElementById('reload').onclick=reload;
+
+// Kit médico
+document.getElementById('heal').onclick=()=>{
+if(hp>=100)return;
+hp=Math.min(100,hp+25);
+updateHUD();
+};
+
+// Loop
+const clock=new THREE.Clock();
+function animate(){
+requestAnimationFrame(animate);
+const dt=Math.min(clock.getDelta(),.04);
+
+camera.rotation.order='YXZ';
+camera.rotation.y=yaw;
+camera.rotation.x=pitch;
+
+let forward=move.y;
+let sideways=move.x;
+if(keys.w)forward=-1;
+if(keys.s)forward=1;
+if(keys.a)sideways=-1;
+if(keys.d)sideways=1;
+
+const direction=new THREE.Vector3();
+camera.getWorldDirection(direction);
+direction.y=0;direction.normalize();
+const right=new THREE.Vector3().crossVectors(direction,new THREE.Vector3(0,1,0)).normalize();
+
+camera.position.addScaledVector(direction,-forward*5*dt);
+camera.position.addScaledVector(right,sideways*5*dt);
+camera.position.y=1.7;
+
+renderer.render(scene,camera);
+}
+animate();
+
+document.getElementById('begin').onclick=()=>{
+document.getElementById('start').style.display='none';
+};
+
+addEventListener('resize',()=>{
+camera.aspect=innerWidth/innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(innerWidth,innerHeight);
+});
+</script>
+</body>
+  </html>
+  
