@@ -1,0 +1,10 @@
+{
+  "name": "OPERATION FRONTLINE",
+  "short_name": "FRONTLINE",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0a100e",
+  "theme_color": "#0a100e",
+  "icons": []
+}
