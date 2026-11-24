@@ -4,11 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#0a100e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>OPERATION FRONTLINE — Teste</title>
 <style>
 :root{--gold:#c5a46a;--panel:#0b1512ed;--line:#738276;--red:#a43b32}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0a100e;color:#f2f5ef;font-family:Arial,sans-serif}
+html,body{margin:0;width:100%;height:100%;min-height:100%;overflow:hidden;background:#0a100e;color:#f2f5ef;font-family:Arial,sans-serif;overscroll-behavior:none}
 button{font:inherit;color:inherit;touch-action:manipulation}
 #scene{position:fixed;inset:0;background:linear-gradient(#819d9b 0%,#b4b39a 42%,#64764a 43%,#263c27 100%);overflow:hidden}
 #horizon{position:absolute;left:-10%;right:-10%;top:39%;height:20%;background:linear-gradient(transparent,#526c42)}
@@ -83,9 +86,25 @@ p{color:#c8d2c9;line-height:1.5;font-size:13px;max-width:440px}
 <div id="portrait">↻<br><br>Gire o celular para a horizontal para jogar.</div>
 <script>
 const $=id=>document.getElementById(id);
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active')}
-function openLobby(){show('lobby')}
-function openTraining(){show('');$('hud').style.display='block';$('trainingTitle').style.display='block';}
+async function enterImmersive(){
+  try {
+    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+      await document.documentElement.requestFullscreen();
+    }
+  } catch(e) {
+    // Alguns navegadores só permitem tela cheia depois de instalar o app.
+  }
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      await screen.orientation.lock('landscape');
+    }
+  } catch(e) {
+    // O bloqueio horizontal depende do navegador e do dispositivo.
+  }
+}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));if(id)$(id).classList.add('active')}
+function openLobby(){enterImmersive();show('lobby')}
+function openTraining(){enterImmersive();show('');$('hud').style.display='block';$('trainingTitle').style.display='block';}
 let hp=100,ammo=30,reserve=90,kits=3,moveX=0,moveY=0,running=false,crouched=false,aiming=false,fireTimer=null,lookX=0;
 function notice(t){$('notice').textContent=t;$('notice').style.opacity=1;clearTimeout(notice.timer);notice.timer=setTimeout(()=>$('notice').style.opacity=0,1200)}
 function update(){ $('hp').textContent=hp;$('healthFill').style.width=hp+'%';$('ammo').textContent=ammo;$('reserve').textContent=reserve;$('stance').textContent=crouched?'AGACHADO':running?'CORRENDO':'EM PÉ';$('med').textContent='KIT '+kits}
