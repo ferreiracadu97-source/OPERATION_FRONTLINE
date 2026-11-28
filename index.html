@@ -1,127 +1,47 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#0a100e">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>OPERATION FRONTLINE — Teste</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#080e0b"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>OPERATION FRONTLINE — Build 0.5</title>
 <style>
-:root{--gold:#c5a46a;--panel:#0b1512ed;--line:#738276;--red:#a43b32}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;width:100%;height:100%;min-height:100%;overflow:hidden;background:#0a100e;color:#f2f5ef;font-family:Arial,sans-serif;overscroll-behavior:none}
-button{font:inherit;color:inherit;touch-action:manipulation}
-#scene{position:fixed;inset:0;background:linear-gradient(#819d9b 0%,#b4b39a 42%,#64764a 43%,#263c27 100%);overflow:hidden}
-#horizon{position:absolute;left:-10%;right:-10%;top:39%;height:20%;background:linear-gradient(transparent,#526c42)}
-.mountain{position:absolute;bottom:54%;width:0;height:0;border-left:22vw solid transparent;border-right:22vw solid transparent;border-bottom:19vh solid #53675b;filter:drop-shadow(0 5px 0 #465d4b)}
-.mountain.m1{left:-5%}.mountain.m2{right:3%;border-bottom-color:#64776a;transform:scale(.8)}
-.tree{position:absolute;bottom:30%;width:0;height:0;border-left:35px solid transparent;border-right:35px solid transparent;border-bottom:110px solid #1d3826;filter:drop-shadow(0 5px 4px #152619)}
-.tree:after{content:"";position:absolute;left:-5px;top:75px;width:10px;height:48px;background:#493a28}
-#ground{position:absolute;left:-20%;right:-20%;bottom:-20%;height:65%;background:repeating-linear-gradient(174deg,#405b35 0 18px,#49653b 19px 37px,#3b5532 38px 55px);transform:perspective(300px) rotateX(12deg)}
-#trainingTitle{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.18em;background:#08120dcc;border:1px solid #ffffff55;padding:8px 12px;white-space:nowrap}
-.target{position:absolute;bottom:35%;width:28px;height:76px;background:#d0c9b2;border:3px solid #4a4d43;box-shadow:0 4px 8px #0008}
-.target:before{content:"";position:absolute;left:7px;top:12px;width:8px;height:8px;border-radius:50%;background:#a43b32}
-.target:after{content:"";position:absolute;left:9px;top:74px;width:5px;height:35px;background:#333}
-#cross{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:25px;text-shadow:0 1px 5px black}
-#hud{display:none;position:fixed;inset:0;z-index:4;pointer-events:none}
-.hudbox{position:absolute;top:12px;background:#07110edb;border:1px solid #ffffff66;padding:8px 11px;font-size:11px}
-#healthBox{left:12px;min-width:150px}#ammoBox{right:12px;text-align:right}#ammo{font-size:25px;font-weight:bold}
-#healthBar{height:6px;background:#38463b;margin-top:5px}#healthFill{height:100%;width:100%;background:#71b96d}
-#stick{position:absolute;left:17px;bottom:17px;width:112px;height:112px;border:2px solid #ffffff88;background:#ffffff22;border-radius:50%;pointer-events:auto;touch-action:none}
-#knob{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:43px;height:43px;border-radius:50%;background:#e7eee0bb;border:2px solid white}
-.ctrl{position:absolute;pointer-events:auto;border:1px solid #ffffffaa;border-radius:50%;background:#26382ee8;width:54px;height:54px;font-size:10px;font-weight:bold;box-shadow:0 3px 8px #0008}
-#fire{right:17px;bottom:22px;width:78px;height:78px;background:#a43b32;border:2px solid #e7b4a7}
-#aim{right:105px;bottom:28px}#jump{right:90px;bottom:104px}#run{right:163px;bottom:111px}#crouch{right:165px;bottom:35px;width:48px;height:48px}#reload{right:15px;bottom:113px;width:82px;height:40px;border-radius:5px}#med{right:111px;bottom:180px;width:65px;height:40px;border-radius:5px}
-#notice{position:absolute;top:19%;left:50%;transform:translateX(-50%);background:#07110eef;padding:8px 14px;border:1px solid #fff7;opacity:0;transition:opacity .15s}
-.screen{position:fixed;inset:0;z-index:5;display:none;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:20px;background:linear-gradient(120deg,#07100ef0,#07100e9c 65%,#07100e77)}
-.screen.active{display:block}
-#menu{background:linear-gradient(120deg,#07100ef2,#07100e99),radial-gradient(ellipse at 70% 50%,#52634a,#101a15)}
-.brand{font-size:clamp(28px,6vw,52px);font-weight:900;letter-spacing:.12em;margin-top:18vh}
-.gold{color:var(--gold)}.sub{font-size:10px;letter-spacing:.35em;color:var(--gold);margin-top:8px}
-p{color:#c8d2c9;line-height:1.5;font-size:13px;max-width:440px}
-.btn{padding:13px 18px;background:#17251d;border:1px solid #829083;border-radius:3px;font-weight:bold;letter-spacing:.08em;margin:5px 5px 5px 0}
-.primary{background:linear-gradient(#d0b47d,#987342);border:0;color:#111810}
-.panel{max-width:520px;background:var(--panel);border:1px solid var(--line);padding:17px;margin:4vh auto;max-height:88vh;overflow-y:auto;touch-action:pan-y}
-.label{font-size:10px;letter-spacing:.2em;color:var(--gold);font-weight:bold;margin:12px 0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.mode{padding:13px;text-align:left;background:#1b2a21;border:1px solid #596a5d}.mode.selected{border-color:var(--gold);background:#484735}
-.row{display:flex;justify-content:space-between;border-bottom:1px solid #344239;padding:10px 0;font-size:12px;color:#d0d8d0}
-.wide{width:100%;padding:14px;background:var(--red);border:1px solid #d58b79;font-weight:900;letter-spacing:.12em;margin-top:14px}
-#portrait{display:none;position:fixed;inset:0;z-index:20;background:#09110d;align-items:center;justify-content:center;text-align:center;padding:25px}
-@media(orientation:portrait){#portrait{display:flex}}
-</style>
-</head>
+:root{--gold:#d0b477;--panel:#09130feF;--line:#788776;--red:#a83d32}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080e0b;color:#edf2e9;font-family:Arial,sans-serif;overscroll-behavior:none}button{font:inherit;color:inherit;touch-action:manipulation}#scene{position:fixed;inset:0;background:#8c9b8e}#scene canvas{width:100%;height:100%;display:block}#trainingTitle{position:absolute;z-index:2;top:12px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.18em;background:#08120dcc;border:1px solid #ffffff55;padding:8px 12px;white-space:nowrap;pointer-events:none}#cross{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:24px;color:#fff;text-shadow:0 1px 5px #000;pointer-events:none}#hud{display:none;position:fixed;inset:0;z-index:4;pointer-events:none}.hudbox{position:absolute;top:12px;background:#07110edb;border:1px solid #ffffff66;padding:8px 11px;font-size:11px;text-shadow:0 1px 3px #000}#healthBox{left:12px;min-width:150px}#ammoBox{right:12px;text-align:right}#ammo{font-size:25px;font-weight:bold}#healthBar{height:6px;background:#38463b;margin-top:5px}#healthFill{height:100%;width:100%;background:#80c879}#notice{position:absolute;top:19%;left:50%;transform:translateX(-50%);background:#07110eef;padding:8px 14px;border:1px solid #fff7;opacity:0;transition:opacity .15s}#stick{position:absolute;left:17px;bottom:17px;width:112px;height:112px;border:2px solid #ffffff88;background:#ffffff22;border-radius:50%;pointer-events:auto;touch-action:none}#knob{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:43px;height:43px;border-radius:50%;background:#e7eee0bb;border:2px solid white}.ctrl{position:absolute;pointer-events:auto;border:1px solid #ffffffaa;border-radius:50%;background:#26382ee8;width:54px;height:54px;font-size:10px;font-weight:bold;box-shadow:0 3px 8px #0008}#fire{right:17px;bottom:22px;width:78px;height:78px;background:#a43b32;border:2px solid #e7b4a7}#aim{right:105px;bottom:28px}#jump{right:90px;bottom:104px}#run{right:163px;bottom:111px}#crouch{right:165px;bottom:35px;width:48px;height:48px}#reload{right:15px;bottom:113px;width:82px;height:40px;border-radius:5px}#med{right:111px;bottom:180px;width:65px;height:40px;border-radius:5px}.screen{position:fixed;inset:0;z-index:5;display:none;overflow-y:auto;padding:20px;background:linear-gradient(120deg,#07100ef2,#07100e99 65%,#07100e77)}.screen.active{display:block}#menu{background:linear-gradient(120deg,#07100ef2,#07100e99),radial-gradient(ellipse at 70% 50%,#52634a,#101a15)}.brand{font-size:clamp(28px,6vw,52px);font-weight:900;letter-spacing:.12em;margin-top:18vh}.gold{color:var(--gold)}.sub{font-size:10px;letter-spacing:.35em;color:var(--gold);margin-top:8px}p{color:#c8d2c9;line-height:1.5;font-size:13px;max-width:440px}.btn{padding:13px 18px;background:#17251d;border:1px solid #829083;border-radius:3px;font-weight:bold;letter-spacing:.08em;margin:5px 5px 5px 0}.primary{background:linear-gradient(#d0b47d,#987342);border:0;color:#111810}.panel{max-width:520px;background:var(--panel);border:1px solid var(--line);padding:17px;margin:4vh auto;max-height:88vh;overflow-y:auto}.label{font-size:10px;letter-spacing:.2em;color:var(--gold);font-weight:bold;margin:12px 0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode{padding:13px;text-align:left;background:#1b2a21;border:1px solid #596a5d}.mode.selected{border-color:var(--gold);background:#484735}.row{display:flex;justify-content:space-between;border-bottom:1px solid #344239;padding:10px 0;font-size:12px;color:#d0d8d0}.wide{width:100%;padding:14px;background:var(--red);border:1px solid #d58b79;font-weight:900;letter-spacing:.12em;margin-top:14px}#portrait{display:none;position:fixed;inset:0;z-index:20;background:#09110d;align-items:center;justify-content:center;text-align:center;padding:25px}@media(orientation:portrait){#portrait{display:flex}}@media(pointer:fine){#stick,.ctrl{opacity:.82}}
+</style></head>
 <body>
-<div id="scene">
- <div class="mountain m1"></div><div class="mountain m2"></div><div id="horizon"></div>
- <div class="tree" style="left:8%;transform:scale(.8)"></div><div class="tree" style="left:23%;transform:scale(1.1)"></div><div class="tree" style="right:9%;transform:scale(1.15)"></div><div class="tree" style="right:25%;transform:scale(.75)"></div>
- <div id="ground"></div><div id="trainingTitle">CAMPO DE TREINAMENTO • WHITE HAVEN</div>
- <div class="target" style="left:44%"></div><div class="target" style="left:54%;transform:scale(.8);transform-origin:bottom"></div><div class="target" style="left:63%;transform:scale(.65);transform-origin:bottom"></div>
- <div id="cross">+</div>
-</div>
-<div id="hud">
- <div id="healthBox" class="hudbox">OPERATION FRONTLINE<br>VIDA: <b id="hp">100</b><div id="healthBar"><div id="healthFill"></div></div><span id="stance">EM PÉ</span></div>
- <div id="ammoBox" class="hudbox">FUZIL DE ASSALTO<br><span id="ammo">30</span> / <span id="reserve">90</span></div>
- <div id="stick"><div id="knob"></div></div>
- <button class="ctrl" id="fire">ATIRAR</button><button class="ctrl" id="aim">MIRA</button><button class="ctrl" id="jump">PULAR</button><button class="ctrl" id="run">CORRER</button><button class="ctrl" id="crouch">AGACHAR</button><button class="ctrl" id="reload">RECARREGAR</button><button class="ctrl" id="med">KIT +25</button>
- <div id="notice"></div>
-</div>
-<section id="menu" class="screen active">
- <div class="gold" style="font-size:11px;letter-spacing:.3em">PROTÓTIPO DE TESTE • BUILD 0.4.1</div>
- <div class="brand">OPERATION<br>FRONTLINE</div><div class="sub">MOBILE BATTLE ROYALE PROJECT</div>
- <p>Teste de interface e movimentação. Esta versão abre diretamente no menu, sem tela de carregamento.</p>
- <button class="btn primary" onclick="openLobby()">ENTRAR NO JOGO　➜</button><button class="btn" onclick="openTraining()">TREINAMENTO RÁPIDO</button>
-</section>
-<section id="lobby" class="screen">
- <div class="panel"><div class="gold">OPERATION FRONTLINE / LOBBY</div><h2>PRONTO PARA A MISSÃO?</h2>
- <div class="label">SELECIONE O MODO</div><div class="grid">
- <button class="mode selected">SOLO <small>1 JOGADOR</small></button><button class="mode">DUO <small>2 JOGADORES</small></button><button class="mode">TRIO <small>3 JOGADORES</small></button><button class="mode">ESQUADRÃO <small>4 JOGADORES</small></button></div>
- <div class="label">MAPAS PLANEJADOS</div><div class="row"><span>WHITE HAVEN</span><b>EM DESENVOLVIMENTO</b></div><div class="row"><span>BLACK ISLAND</span><b>EM DESENVOLVIMENTO</b></div>
- <div class="label">ARSENAL</div><div class="row"><span>7 categorias de armas</span><b>28 classes planejadas</b></div><div class="row"><span>Kits, munições e granadas</span><b>PLANEJADOS</b></div>
- <button class="wide" onclick="openTraining()">INICIAR TREINAMENTO</button><button class="btn" onclick="show('menu')">VOLTAR</button>
- </div>
-</section>
+<div id="scene"><div id="trainingTitle">CAMPO DE TREINAMENTO • WHITE HAVEN</div><div id="cross">+</div></div>
+<div id="hud"><div id="healthBox" class="hudbox">OPERATION FRONTLINE<br>VIDA: <b id="hp">100</b><div id="healthBar"><div id="healthFill"></div></div><span id="stance">EM PÉ</span></div><div id="ammoBox" class="hudbox">FUZIL DE ASSALTO<br><span id="ammo">30</span> / <span id="reserve">90</span></div><div id="stick"><div id="knob"></div></div><button class="ctrl" id="fire">ATIRAR</button><button class="ctrl" id="aim">MIRA</button><button class="ctrl" id="jump">PULAR</button><button class="ctrl" id="run">CORRER</button><button class="ctrl" id="crouch">AGACHAR</button><button class="ctrl" id="reload">RECARREGAR</button><button class="ctrl" id="med">KIT 3</button><div id="notice"></div></div>
+<section id="menu" class="screen active"><div class="gold" style="font-size:11px;letter-spacing:.3em">PROTÓTIPO DE TESTE • BUILD 0.5</div><div class="brand">OPERATION<br>FRONTLINE</div><div class="sub">MOBILE BATTLE ROYALE PROJECT</div><p>Atualização gráfica: arena 3D, terreno com relevo, vegetação procedural, iluminação física e sombras adaptativas.</p><button class="btn primary" onclick="openLobby()">ENTRAR NO JOGO　➜</button><button class="btn" onclick="openTraining()">TREINAMENTO RÁPIDO</button></section>
+<section id="lobby" class="screen"><div class="panel"><div class="gold">OPERATION FRONTLINE / LOBBY</div><h2>PRONTO PARA A MISSÃO?</h2><div class="label">SELECIONE O MODO</div><div class="grid"><button class="mode selected">SOLO <small>1 JOGADOR</small></button><button class="mode">DUO <small>2 JOGADORES</small></button><button class="mode">TRIO <small>3 JOGADORES</small></button><button class="mode">ESQUADRÃO <small>4 JOGADORES</small></button></div><div class="label">MAPAS PLANEJADOS</div><div class="row"><span>WHITE HAVEN</span><b>EM DESENVOLVIMENTO</b></div><div class="row"><span>BLACK ISLAND</span><b>EM DESENVOLVIMENTO</b></div><div class="label">ARSENAL</div><div class="row"><span>7 categorias de armas</span><b>28 classes planejadas</b></div><div class="row"><span>Kits, munições e granadas</span><b>PLANEJADOS</b></div><button class="wide" onclick="openTraining()">INICIAR TREINAMENTO</button><button class="btn" onclick="show('menu')">VOLTAR</button></div></section>
 <div id="portrait">↻<br><br>Gire o celular para a horizontal para jogar.</div>
-<script>
-const $=id=>document.getElementById(id);
-async function enterImmersive(){
-  try {
-    if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-      await document.documentElement.requestFullscreen();
-    }
-  } catch(e) {
-    // Alguns navegadores só permitem tela cheia depois de instalar o app.
-  }
-  try {
-    if (screen.orientation && screen.orientation.lock) {
-      await screen.orientation.lock('landscape');
-    }
-  } catch(e) {
-    // O bloqueio horizontal depende do navegador e do dispositivo.
-  }
-}
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js';
+const $=id=>document.getElementById(id);let renderer,scene,camera,player,clock,ray,targets=[],yaw=0,pitch=0,locked=false,started=false;
+let hp=100,ammo=30,reserve=90,kits=3,running=false,crouched=false,aiming=false,fireLoop=null,moveX=0,moveY=0,keys={};
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));if(id)$(id).classList.add('active')}
-function openLobby(){enterImmersive();show('lobby')}
-function openTraining(){enterImmersive();show('');$('hud').style.display='block';$('trainingTitle').style.display='block';}
-let hp=100,ammo=30,reserve=90,kits=3,moveX=0,moveY=0,running=false,crouched=false,aiming=false,fireTimer=null,lookX=0;
-function notice(t){$('notice').textContent=t;$('notice').style.opacity=1;clearTimeout(notice.timer);notice.timer=setTimeout(()=>$('notice').style.opacity=0,1200)}
-function update(){ $('hp').textContent=hp;$('healthFill').style.width=hp+'%';$('ammo').textContent=ammo;$('reserve').textContent=reserve;$('stance').textContent=crouched?'AGACHADO':running?'CORRENDO':'EM PÉ';$('med').textContent='KIT '+kits}
-function shoot(){if(ammo<=0){notice('SEM MUNIÇÃO');return}ammo--;update();notice('DISPARO');}
-function reload(){if(ammo===30||reserve<=0){notice('NÃO É POSSÍVEL RECARREGAR');return}notice('RECARREGANDO');setTimeout(()=>{let n=Math.min(30-ammo,reserve);ammo+=n;reserve-=n;update()},1000)}
-function heal(){if(kits<=0||hp>=100){notice('KIT INDISPONÍVEL');return}kits--;hp=Math.min(100,hp+25);update();notice('+25 VIDA')}
-function bindHold(id,down,up){let el=$(id);el.addEventListener('pointerdown',e=>{e.preventDefault();el.setPointerCapture(e.pointerId);down()});['pointerup','pointercancel','lostpointercapture'].forEach(k=>el.addEventListener(k,()=>up&&up()))}
-bindHold('fire',()=>{shoot();fireTimer=setInterval(shoot,180)},()=>clearInterval(fireTimer));
-bindHold('run',()=>{running=true;update()},()=>{running=false;update()});
-bindHold('aim',()=>{aiming=true;$('cross').style.fontSize='17px'},()=>{aiming=false;$('cross').style.fontSize='25px'});
-$('jump').addEventListener('pointerdown',()=>notice('PULO — TESTE DE CONTROLE'));
-$('crouch').addEventListener('pointerdown',()=>{crouched=!crouched;update()});
-$('reload').addEventListener('pointerdown',reload);$('med').addEventListener('pointerdown',heal);
-const stick=$('stick'),knob=$('knob');let stickId=null;
-function moveStick(e){let r=stick.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,max=35,len=Math.hypot(dx,dy);if(len>max){dx=dx/len*max;dy=dy/len*max}moveX=dx/max;moveY=dy/max;knob.style.left=`calc(50% + ${dx}px)`;knob.style.top=`calc(50% + ${dy}px)`}
-stick.addEventListener('pointerdown',e=>{stickId=e.pointerId;stick.setPointerCapture(stickId);moveStick(e)});stick.addEventListener('pointermove',e=>{if(e.pointerId===stickId)moveStick(e)});function reset(){stickId=null;moveX=moveY=0;knob.style.left='50%';knob.style.top='50%'}['pointerup','pointercancel','lostpointercapture'].forEach(k=>stick.addEventListener(k,reset));
-document.querySelectorAll('.mode').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.mode').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')}));
-update();
-</script>
-</body></html>
+window.openLobby=()=>{immersive();show('lobby')};window.openTraining=()=>{immersive();show('');$('hud').style.display='block';if(!started){init();started=true}};
+async function immersive(){try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen()}catch(e){}try{await screen.orientation?.lock?.('landscape')}catch(e){}}
+function mat(color,rough=.9,metal=0){return new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal})}
+function addTree(x,z,s=1){const g=new THREE.Group();const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.13*s,.22*s,2.1*s,7),mat(0x51402b));trunk.position.y=1.05*s;g.add(trunk);for(let i=0;i<4;i++){const crown=new THREE.Mesh(new THREE.IcosahedronGeometry((1.05-i*.12)*s,1),mat(i%2?0x263f2d:0x304b34));crown.position.set((Math.random()-.5)*.25*s,(2.05+i*.48)*s,(Math.random()-.5)*.2*s);crown.scale.set(1,.85,1);g.add(crown)}g.position.set(x,0,z);scene.add(g)}
+function addRock(x,z,s){const o=new THREE.Mesh(new THREE.DodecahedronGeometry(s,1),mat(0x77796b));o.position.set(x,s*.45,z);o.rotation.set(Math.random(),Math.random(),Math.random());o.scale.y=.65;scene.add(o)}
+function makeTarget(x,z,scale=1){const g=new THREE.Group(),uniform=mat(0x66745c),dark=mat(0x303b30),skin=mat(0x9a8066);const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.34*scale,.75*scale,4,8),uniform);torso.position.y=1.25*scale;g.add(torso);const head=new THREE.Mesh(new THREE.SphereGeometry(.22*scale,12,10),skin);head.position.y=1.95*scale;g.add(head);const helmet=new THREE.Mesh(new THREE.SphereGeometry(.25*scale,12,8,0,Math.PI*2,0,Math.PI/2),dark);helmet.position.y=2.08*scale;g.add(helmet);for(const side of [-1,1]){const leg=new THREE.Mesh(new THREE.CapsuleGeometry(.12*scale,.55*scale,3,7),dark);leg.position.set(side*.17*scale,.43*scale,0);g.add(leg)}g.position.set(x,0,z);g.userData.hit=false;scene.add(g);targets.push(g)}
+function init(){const host=$('scene');scene=new THREE.Scene();scene.background=new THREE.Color(0x9eafa8);scene.fog=new THREE.Fog(0x9eafa8,42,115);camera=new THREE.PerspectiveCamera(72,1,.1,180);renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.75));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.08;host.insertBefore(renderer.domElement,host.firstChild);
+scene.add(new THREE.HemisphereLight(0xe4f0e8,0x48513c,1.65));const sun=new THREE.DirectionalLight(0xffe3bd,2.4);sun.position.set(-24,38,18);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-42;sun.shadow.camera.right=42;sun.shadow.camera.top=42;sun.shadow.camera.bottom=-42;sun.shadow.bias=-.00025;scene.add(sun);
+const groundGeo=new THREE.PlaneGeometry(150,150,100,100);const p=groundGeo.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i);p.setZ(i,Math.sin(x*.12)*.22+Math.cos(y*.16)*.18+Math.sin((x+y)*.08)*.12)}groundGeo.computeVertexNormals();const ground=new THREE.Mesh(groundGeo,mat(0x53664a,1));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+const patch=new THREE.Mesh(new THREE.CircleGeometry(15,64),mat(0x687052,1));patch.rotation.x=-Math.PI/2;patch.position.set(0,.025,8);patch.receiveShadow=true;scene.add(patch);
+// Pedras, arbustos e árvores formam uma arena de treino cercada por floresta.
+for(let i=0;i<65;i++){let a=Math.random()*Math.PI*2,r=23+Math.random()*34;addTree(Math.cos(a)*r,Math.sin(a)*r,.75+Math.random()*.8)}for(let i=0;i<38;i++){let x=(Math.random()-.5)*42,z=8+Math.random()*42;if(Math.abs(x)>5||z>22)addRock(x,z,.35+Math.random()*.85)}
+const hillMat=mat(0x657363);for(let i=0;i<9;i++){const h=new THREE.Mesh(new THREE.ConeGeometry(8+Math.random()*8,10+Math.random()*9,7),hillMat);h.position.set((i-4)*19,-1,-68-Math.random()*12);h.rotation.y=Math.random();scene.add(h)}
+// Obstáculos de treinamento com materiais foscos e bordas de madeira.
+for(let i=0;i<5;i++){const crate=new THREE.Mesh(new THREE.BoxGeometry(2.1,1.4,1.5),mat(0x66543a));crate.position.set(-9+i*4.5,.7,9+(i%2)*2);crate.castShadow=true;crate.receiveShadow=true;scene.add(crate)}
+makeTarget(-5,19,1);makeTarget(0,22,.9);makeTarget(5,25,.8);
+player=new THREE.Object3D();player.position.set(0,1.7,0);scene.add(player);player.add(camera);ray=new THREE.Raycaster();clock=new THREE.Clock();renderer.domElement.addEventListener('click',()=>{if(matchMedia('(pointer:fine)').matches&&!locked)renderer.domElement.requestPointerLock?.()});document.addEventListener('pointerlockchange',()=>locked=document.pointerLockElement===renderer.domElement);document.addEventListener('mousemove',e=>{if(locked){yaw-=e.movementX*.002;pitch=THREE.MathUtils.clamp(pitch-e.movementY*.002,-1.15,1.15);player.rotation.y=yaw;camera.rotation.x=pitch}});$('fire').onclick=shoot;resize();window.addEventListener('resize',resize);animate()}
+function resize(){if(!renderer)return;const w=$('scene').clientWidth,h=$('scene').clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+function updateHud(){$('hp').textContent=hp;$('healthFill').style.width=hp+'%';$('ammo').textContent=ammo;$('reserve').textContent=reserve;$('stance').textContent=crouched?'AGACHADO':running?'CORRENDO':'EM PÉ';$('med').textContent='KIT '+kits}
+function notice(t){$('notice').textContent=t;$('notice').style.opacity=1;clearTimeout(notice.timer);notice.timer=setTimeout(()=>$('notice').style.opacity=0,1100)}
+function shoot(){if(!renderer)return;if(ammo<=0){notice('SEM MUNIÇÃO');return}ammo--;updateHud();notice('DISPARO');ray.setFromCamera(new THREE.Vector2(0,0),camera);const hits=ray.intersectObjects(targets,true);if(hits.length){let obj=hits[0].object;obj.material=mat(0x9a5943);setTimeout(()=>{if(obj)obj.material=mat(0x66745c)},250);notice('ALVO ATINGIDO')}}
+function reload(){if(ammo===30||reserve<=0){notice('NÃO É POSSÍVEL RECARREGAR');return}notice('RECARREGANDO');setTimeout(()=>{const n=Math.min(30-ammo,reserve);ammo+=n;reserve-=n;updateHud()},850)}function heal(){if(kits<=0||hp>=100){notice('KIT INDISPONÍVEL');return}kits--;hp=Math.min(100,hp+25);updateHud();notice('+25 VIDA')}
+function bindHold(id,down,up){const el=$(id);el.addEventListener('pointerdown',e=>{e.preventDefault();el.setPointerCapture(e.pointerId);down()});['pointerup','pointercancel','lostpointercapture'].forEach(k=>el.addEventListener(k,()=>up&&up()))}bindHold('fire',()=>{shoot();fireLoop=setInterval(shoot,180)},()=>clearInterval(fireLoop));bindHold('run',()=>{running=true;updateHud()},()=>{running=false;updateHud()});bindHold('aim',()=>{$('cross').style.fontSize='16px';camera.fov=48;camera.updateProjectionMatrix()},()=>{$('cross').style.fontSize='24px';camera.fov=72;camera.updateProjectionMatrix()});$('jump').addEventListener('pointerdown',()=>{if(player){player.position.y=2.15;setTimeout(()=>{if(player)player.position.y=1.7},260)}});$('crouch').addEventListener('pointerdown',()=>{crouched=!crouched;if(player)player.position.y=crouched?1.1:1.7;updateHud()});$('reload').addEventListener('pointerdown',reload);$('med').addEventListener('pointerdown',heal);
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='r')reload();if(e.key.toLowerCase()==='h')heal()});window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+const stick=$('stick'),knob=$('knob');let stickId=null;function moveStick(e){const r=stick.getBoundingClientRect();let dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,max=35,len=Math.hypot(dx,dy);if(len>max){dx=dx/len*max;dy=dy/len*max}moveX=dx/max;moveY=dy/max;knob.style.left=`calc(50% + ${dx}px)`;knob.style.top=`calc(50% + ${dy}px)`}stick.addEventListener('pointerdown',e=>{stickId=e.pointerId;stick.setPointerCapture(stickId);moveStick(e)});stick.addEventListener('pointermove',e=>{if(e.pointerId===stickId)moveStick(e)});function resetStick(){stickId=null;moveX=moveY=0;knob.style.left='50%';knob.style.top='50%'}['pointerup','pointercancel','lostpointercapture'].forEach(k=>stick.addEventListener(k,resetStick));
+function animate(){requestAnimationFrame(animate);if(!renderer)return;const dt=Math.min(clock.getDelta(),.04),f=(keys.w?1:0)-(keys.s?1:0)-moveY,s=(keys.d?1:0)-(keys.a?1:0)+moveX,v=new THREE.Vector3(s,0,f);if(v.lengthSq()){v.normalize().applyAxisAngle(new THREE.Vector3(0,1,0),yaw);player.position.addScaledVector(v,(running?8:5)*dt)}player.position.x=THREE.MathUtils.clamp(player.position.x,-42,42);player.position.z=THREE.MathUtils.clamp(player.position.z,-42,42);renderer.render(scene,camera)}updateHud();
+</script></body></html>
